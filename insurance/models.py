@@ -1,8 +1,16 @@
 from django.db import models
+from django.contrib.auth.models import User  # or your custom user model
 
 class Insurance(models.Model):
 
     insurance_name = models.CharField(max_length=255, unique=True)
+    policy_owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='insurances',
+        null=True,
+        blank=True
+    )
     policy_number = models.CharField(max_length=255, unique=True)
     policy_type = models.CharField(max_length=255)
     provider = models.CharField(max_length=255)

@@ -11,6 +11,13 @@ class InsuranceSerializer(serializers.Serializer):
     premium = serializers.DecimalField(max_digits=10, decimal_places=2)
     start_date = serializers.DateField()
     end_date = serializers.DateField()
+    policy_owner = serializers.SerializerMethodField()
+
+    def get_policy_owner(self, obj):
+        return {
+            "username": obj.policy_owner.username,
+            "email": obj.policy_owner.email,
+        }
 
     def create(self, validate_data):
         return Insurance.objects.create(**validate_data)

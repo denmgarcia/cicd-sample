@@ -1,3 +1,4 @@
+import random
 from django.http import Http404
 from rest_framework.views import APIView
 from .models import Insurance
@@ -5,6 +6,7 @@ from .serializers import InsuranceSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
 
 class InsuranceList(APIView):
@@ -49,3 +51,28 @@ class InsuranceDetail(APIView):
             status=status.HTTP_204_NO_CONTENT
         )
 
+class InsuranceCreateFakeData(APIView):
+
+    def post(self, request, format=None):
+
+        insurance = []
+        for _ in range(1, 10):
+            placeholder = random.choice(['Health', 'Life', 'Car'])
+            insurance_obj = Insurance(
+                insurance_name=f"{placeholder}-{timezone.now()}",
+                policy_number=f"{random.randint(1_000, 9_999)}-{placeholder}-{timezone.now()}",
+                policy_type=placeholder,
+                provider="test",
+                premium=random.uniform(10_50.74, 10_500.89),
+                start_date="2025-04-23",
+                end_date="2035-04-23",
+                policy_owner_id=1,
+            )
+
+            insurance.append(insurance_obj)
+
+        Insurance.objects.bulk_create(insurance)
+
+        return Response({
+            "message": "Successfully created test data"
+        }, status=status.HTTP_201_CREATED)
