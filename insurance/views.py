@@ -25,8 +25,8 @@ class InsuranceList(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class InsuranceDetail(APIView):
 
+class InsuranceDetail(APIView):
 
     def get(self, request, pk, format=None):
         insurance = get_object_or_404(Insurance, pk=pk)
@@ -45,11 +45,10 @@ class InsuranceDetail(APIView):
         insurance = get_object_or_404(Insurance, pk=pk)
         insurance.delete()
         return Response(
-            {
-                "message": f"ID: {pk} is successfully deleted on the database!"
-            },
-            status=status.HTTP_204_NO_CONTENT
+            {"message": f"ID: {pk} is successfully deleted on the database!"},
+            status=status.HTTP_204_NO_CONTENT,
         )
+
 
 class InsuranceCreateFakeData(APIView):
 
@@ -57,7 +56,7 @@ class InsuranceCreateFakeData(APIView):
 
         insurance = []
         for _ in range(1, 10):
-            placeholder = random.choice(['Health', 'Life', 'Car'])
+            placeholder = random.choice(["Health", "Life", "Car"])
             insurance_obj = Insurance(
                 insurance_name=f"{placeholder}-{timezone.now()}",
                 policy_number=f"{random.randint(1_000, 9_999)}-{placeholder}-{timezone.now()}",
@@ -73,6 +72,7 @@ class InsuranceCreateFakeData(APIView):
 
         Insurance.objects.bulk_create(insurance)
 
-        return Response({
-            "message": "Successfully created test data"
-        }, status=status.HTTP_201_CREATED)
+        return Response(
+            {"message": "Successfully created test data"},
+            status=status.HTTP_201_CREATED,
+        )

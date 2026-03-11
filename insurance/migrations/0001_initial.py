@@ -7,21 +7,28 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Insurance',
+            name="Insurance",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('insurance_name', models.CharField(max_length=255, unique=True)),
-                ('policy_number', models.CharField(max_length=255, unique=True)),
-                ('policy_type', models.CharField(max_length=255)),
-                ('provider', models.CharField(max_length=255)),
-                ('premium', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('start_date', models.DateField()),
-                ('end_date', models.DateField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("insurance_name", models.CharField(max_length=255, unique=True)),
+                ("policy_number", models.CharField(max_length=255, unique=True)),
+                ("policy_type", models.CharField(max_length=255)),
+                ("provider", models.CharField(max_length=255)),
+                ("premium", models.DecimalField(decimal_places=2, max_digits=10)),
+                ("start_date", models.DateField()),
+                ("end_date", models.DateField()),
             ],
         ),
     ]
