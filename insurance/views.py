@@ -75,7 +75,6 @@ class InsuranceCreateFakeData(APIView):
 
         return Response(
             {"message": "Successfully created test data"},
-            status=status.HTTP_201_CREATED,
         )
 
 
@@ -83,8 +82,8 @@ class InsuranceTest(APIView):
 
     def get(self, request, format=None):
 
-        moderns = Modern.objects.all()
-
         return Response(
-            {"hey": "If you see this then wow!", "data": [modern for modern in moderns]}
+            {
+                "hey": "If you see this then wow!",
+            }, status=status.H
         )
