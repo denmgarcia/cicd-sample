@@ -56,7 +56,7 @@ pipeline {
                 script {
                     sh """
                         # Replace image tag in deployment.yaml
-                        sed -i 's|cyborden/cicd-sample:.*|cyborden/cicd-sample:${IMAGE_TAG}|g' bpims/kubernetes/deployment.yaml
+                        sed -i 's|cyborden/cicd-sample:.*|cyborden/cicd-sample:${IMAGE_TAG}|g' kubernetes/deployment.yaml
 
                         # Commit and push the updated manifest
                         git config user.email "dengarcia.x@gmail.com"
