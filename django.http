@@ -7,7 +7,7 @@ GET http://localhost:8000/insurance/
 GET http://localhost:8000/insurance/1/
 Content-Type: application/json
 
-### Edit specific field
+### Edit data
 PUT http://localhost:8000/insurance/1/
 Content-Type: application/json
 
@@ -35,6 +35,11 @@ Content-Type: application/json
   "end_date": "2030-03-11"
 }
 
-### DELTE Insurance
+### DELETE Insurance
 DELETE http://localhost:8000/insurance/4/
+Content-Type: application/json
+
+
+### Create Test Data
+POST http://localhost:8000/insurance/test/
 Content-Type: application/json
