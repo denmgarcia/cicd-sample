@@ -55,20 +55,37 @@ pipeline {
             steps {
                 script {
 
-                    def manifestPath = "bpims/kubernetes/deployment.yml"
+                    echo "Current workspace: $(pwd)"
+                    echo "Checking for files..."
+                    
+                    # 1. This finds the actual path, even if it is deep in the folders
+                    # It assigns the result to a variable called FILE_PATH
+                    FILE_PATH=$(find . -name "deployment.yml" | head -n 1)
+    
+                    if [ -z "$FILE_PATH" ]; then
+                        echo "ERROR: deployment.yml not found. Listing all files for debug:"
+                        find . -maxdepth 3 -not -path '*/.*'
+                        exit 1
+                    fi
+    
+                    echo "Found file at: $FILE_PATH"
+
                     
                     sh """
                         # Replace image tag in deployment.yaml
-                        # sed -i "s|cyborden/cicd-sample:.*|cyborden/cicd-sample:${IMAGE_TAG}|g" ${manifestPath}
+                        sed -i "s|cyborden/cicd-sample:.*|cyborden/cicd-sample:${IMAGE_TAG}|g" "$FILE_PATH"
 
-                        # Commit and push the updated manifest
-                        # git config user.email "dengarcia.x@gmail.com"
-                        # git config user.name "Jenkins CI"
-                        # git add kubernetes/deployment.yaml
-                        # git commit -m "Update image tag to ${IMAGE_TAG}"
-                        # git push origin main
-                        ls -la kubernetes
-                        pwd
+                        git config user.email "dengarcia.x@gmail.com"
+                        git config user.name "Jenkins CI"
+                        git add "$FILE_PATH"
+                        
+                        if ! git diff --cached --exit-code; then
+                            git commit -m "Update image tag to ${IMAGE_TAG}"
+                            git push origin main
+                        else
+                            echo "No changes made (tag might be the same)."
+                        fi
+
                     """
                 }
             }
