@@ -18,33 +18,19 @@ FROM python:3.12-slim-bookworm
 
 WORKDIR /app
 
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    DJANGO_SETTINGS_MODULE=products.settings \
+    DEBUG=False
+
+ARG SECRET_KEY=dummy-key
+ENV SECRET_KEY=${SECRET_KEY}
 
 RUN addgroup --system app && adduser --system --group app
 
 COPY --from=builder /install /usr/local
 
 COPY . .
-
-ARG SECRET_KEY=test
-ARG DJANGO_SETTINGS_MODULE=myproject.settings 
-ARG DEBUG=False
-
-ENV SECRET_KEY=${SECRET_KEY}
-ENV DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
-ENV DEBUG=${DEBUG}
-ENV POSTGRES_DB=placeholder
-ENV POSTGRES_USER=placeholder
-ENV POSTGRES_PASSWORD=placeholder
-ENV POSTGRES_HOST=localhost
-ENV POSTGRES_PORT=5432
-
-RUN python manage.py collectstatic --noinput
-
-
-
-
 
 RUN python manage.py collectstatic --noinput
 
