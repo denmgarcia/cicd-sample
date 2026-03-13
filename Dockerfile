@@ -27,6 +27,11 @@ COPY --from=builder /install /usr/local
 
 COPY . .
 
+COPY .env .env
+# Dockerfile snippet
+ARG SECRET_KEY
+ENV SECRET_KEY=${SECRET_KEY}
+
 RUN python manage.py collectstatic --noinput
 
 RUN chown -R app:app /app
