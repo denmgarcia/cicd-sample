@@ -1,38 +1,50 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'docker:24.0.0'   // official docker image
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
 
     environment {
-        DOCKER_IMAGE = 'cyborden/bpims-django-api:latest'
-        DOCKER_REGISTRY = 'docker.io'
-        KUBECONFIG_CREDENTIALS_ID = 'kubeconfig-cred' // Jenkins credential with kubeconfig
+        IMAGE_NAME = "cyborden/cicd-sample"  // Replace with your DockerHub repo
+        IMAGE_TAG = "${env.GIT_COMMIT.take(7)}"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                echo 'Checking out source code...'
+                git branch: 'main', url: 'https://github.com/cyborden/cicd-sample.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE .'
+                echo 'Building Docker image...'
+                script {
+                    docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+                }
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
-                    sh 'docker push $DOCKER_IMAGE'
+                echo 'Pushing Docker image to Docker Hub (public)...'
+                script {
+                    // No username/password, assumes public repo
+                    sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
         }
     }
 
     post {
-        always {
-            echo 'Pipeline finished.'
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
         }
     }
 }
