@@ -45,6 +45,14 @@ COPY --from=builder /install /usr/local
 
 COPY . .
 
+COPY entrypoint.sh /entrypoint.sh
+
+# Make it executable
+RUN chmod +x /entrypoint.sh
+
+# Use the script as the entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
+
 RUN python manage.py collectstatic --noinput
 
 RUN chown -R app:app /app

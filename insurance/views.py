@@ -78,9 +78,12 @@ class InsuranceCreateFakeData(APIView):
             status=status.HTTP_201_CREATED,
         )
 
+
 class InsuranceTest(APIView):
 
     def get(self, request, format=None):
-        return Response({
-            "hey": "If you see this then wow!",
-        })
+        return Response(
+            {
+                "hey": "If you see this then wow!",
+            }
+        )

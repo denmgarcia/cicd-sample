@@ -1,6 +1,11 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import InsuranceDetail, InsuranceList, InsuranceCreateFakeData, InsuranceTest
+from .views import (
+    InsuranceDetail,
+    InsuranceList,
+    InsuranceCreateFakeData,
+    InsuranceTest,
+)
 
 urlpatterns = [
     path("", InsuranceList.as_view()),
@@ -8,7 +13,6 @@ urlpatterns = [
     # Test data
     path("test/", InsuranceCreateFakeData.as_view()),
     path("hola/", InsuranceTest.as_view()),
-
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
