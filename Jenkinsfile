@@ -15,7 +15,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Checking out source code...'
-                git branch: 'main', url: 'https://github.com/cyborden/cicd-sample.git'
+                git branch: 'main', url: 'https://github.com/denmgarcia/cicd-sample.git'
             }
         }
 
