@@ -54,11 +54,10 @@ pipeline {
         stage('Update Kubernetes Manifests') {
             steps {
                 script {
-                    sh """
 
-                        def manifestPath = "bpims/kubernetes/deployment.yml"
-
+                    def manifestPath = "bpims/kubernetes/deployment.yml"
                     
+                    sh """
                         # Replace image tag in deployment.yaml
                         sed -i "s|cyborden/cicd-sample:.*|cyborden/cicd-sample:${IMAGE_TAG}|g" ${manifestPath}
 
