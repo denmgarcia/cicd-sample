@@ -45,10 +45,10 @@ COPY --from=builder /install /usr/local
 
 COPY . .
 
-COPY entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /app/entrypoint.sh
 
 # Make it executable
-RUN chmod +x /entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 # Use the script as the entrypoint
 ENTRYPOINT ["/entrypoint.sh"]
