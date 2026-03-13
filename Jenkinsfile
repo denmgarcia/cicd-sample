@@ -67,7 +67,8 @@ pipeline {
                         # git add kubernetes/deployment.yaml
                         # git commit -m "Update image tag to ${IMAGE_TAG}"
                         # git push origin main
-                        ls -la kubernetes 
+                        ls -la kubernetes
+                        pwd
                     """
                 }
             }
