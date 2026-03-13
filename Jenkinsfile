@@ -41,8 +41,13 @@ pipeline {
             steps {
                 echo 'Pushing Docker image to Docker Hub (public)...'
                 script {
-                    // No username/password, assumes public repo
-                    sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                    // This 'id' must match the ID you created in Jenkins
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
+                        def myImage = docker.image("${IMAGE_NAME}:${IMAGE_TAG}")
+                        myImage.push()
+                                        
+                        myImage.push("latest")
+            }
                 }
             }
         }
