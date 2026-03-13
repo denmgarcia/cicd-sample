@@ -64,7 +64,7 @@ pipeline {
                             
                             # 2. Update the image using the IMAGE_TAG env variable
                             # We use the correct image name found in your YAML
-                            sed -i "s|cyborden/cicd-sample:.*|cyborden/cicd-sample:${IMAGE_TAG}|g" "$TARGET"
+                            sed -i "s|image: cyborden/cicd-sample.*|image: cyborden/cicd-sample:${IMAGE_TAG}|g" "$TARGET"
         
                             # 3. Git setup
                             git config user.email "dengarcia.x@gmail.com"
