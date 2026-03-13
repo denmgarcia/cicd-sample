@@ -54,37 +54,37 @@ pipeline {
         stage('Update Kubernetes Manifests') {
             steps {
                 script {
-
-                    echo "Current workspace: "
-                    echo "Checking for files..."
-                    
-                    FILE_PATH=$(find . -name "deployment.yml" | head -n 1)
-    
-                    if [ -z "$FILE_PATH" ]; then
-                        echo "ERROR: deployment.yml not found. Listing all files for debug:"
-                        find . -maxdepth 3 -not -path '*/.*'
-                        exit 1
-                    fi
-    
-                    echo "Found file at: $FILE_PATH"
-
-                    
-                    sh """
-                        # Replace image tag in deployment.yaml
-                        sed -i "s|cyborden/cicd-sample:.*|cyborden/cicd-sample:${IMAGE_TAG}|g" "$FILE_PATH"
-
-                        git config user.email "dengarcia.x@gmail.com"
-                        git config user.name "Jenkins CI"
-                        git add "$FILE_PATH"
-                        
-                        if ! git diff --cached --exit-code; then
-                            git commit -m "Update image tag to ${IMAGE_TAG}"
-                            git push origin main
+                    // TRIPLE SINGLE QUOTES are vital here to avoid Groovy syntax errors
+                    sh '''
+                        # 1. Direct path to the file
+                        TARGET="bpims/kubernetes/deployment.yml"
+        
+                        if [ -f "$TARGET" ]; then
+                            echo "Updating $TARGET"
+                            
+                            # 2. Update the image using the IMAGE_TAG env variable
+                            # We use the correct image name found in your YAML
+                            sed -i "s|cyborden/bpims-django-api:.*|cyborden/bpims-django-api:${IMAGE_TAG}|g" "$TARGET"
+        
+                            # 3. Git setup
+                            git config user.email "dengarcia.x@gmail.com"
+                            git config user.name "Jenkins CI"
+                            
+                            git add "$TARGET"
+                            
+                            # Only commit if something actually changed
+                            if ! git diff --cached --exit-code; then
+                                git commit -m "Update image tag to ${IMAGE_TAG}"
+                                git push origin main
+                            else
+                                echo "No changes detected. Skipping git push."
+                            fi
                         else
-                            echo "No changes made (tag might be the same)."
+                            echo "ERROR: File $TARGET not found."
+                            ls -R
+                            exit 1
                         fi
-
-                    """
+                    '''
                 }
             }
         }
