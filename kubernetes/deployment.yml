@@ -24,3 +24,11 @@ spec:
               value: "False"
             - name: POSTGRES_HOST
               value: postgres-service
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DB
+              value: "bpims" # Ensure these match your actual DB settings
+            - name: POSTGRES_USER
+              value: "bpims"
+            - name: POSTGRES_PASSWORD
+              value: "bpims"
