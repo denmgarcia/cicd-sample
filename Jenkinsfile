@@ -55,7 +55,7 @@ pipeline {
             steps {
                 script {
 
-                    echo "Current workspace: $(pwd)"
+                    echo "Current workspace: "
                     echo "Checking for files..."
                     
                     # 1. This finds the actual path, even if it is deep in the folders
