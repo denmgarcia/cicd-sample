@@ -45,12 +45,32 @@ pipeline {
                     docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
                         def myImage = docker.image("${IMAGE_NAME}:${IMAGE_TAG}")
                         myImage.push()
-                                        
                         myImage.push("latest")
             }
                 }
             }
         }
+
+        stage('Update Kubernetes Manifests') {
+            steps {
+                script {
+                    sh """
+                        # Replace image tag in deployment.yaml
+                        sed -i 's|cyborden/cicd-sample:.*|cyborden/cicd-sample:${IMAGE_TAG}|g' kubernetes/deployment.yaml
+
+                        # Commit and push the updated manifest
+                        git config user.email "dengarcia.x@gmail.com"
+                        git config user.name "Jenkins CI"
+                        git add kubernetes/deployment.yaml
+                        git commit -m "Update image tag to ${IMAGE_TAG}"
+                        git push origin main
+                    """
+                }
+            }
+        }
+
+
+
     }
 
     post {
