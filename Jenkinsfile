@@ -22,8 +22,12 @@ pipeline {
             steps {
                 echo 'Building Docker image...'
                 script {
+                    // Using your snippet with the environment variables defined above
                     docker.build("${IMAGE_NAME}:${IMAGE_TAG}",
-                        "--build-arg SECRET_KEY=${SECRET_KEY} --build-arg POSTGRES_DB=${POSTGRES_DB} --build-arg POSTGRES_USER=${POSTGRES_USER} --build-arg POSTGRES_PASSWORD=${POSTGRES_PASSWORD} ."
+                        "--build-arg SECRET_KEY=${SECRET_KEY} " +
+                        "--build-arg POSTGRES_DB=${DB_NAME} " +
+                        "--build-arg POSTGRES_USER=${DB_USER} " +
+                        "--build-arg POSTGRES_PASSWORD=${DB_PASS} ."
                     )
                 }
             }
