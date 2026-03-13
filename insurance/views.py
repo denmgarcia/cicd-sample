@@ -2,7 +2,7 @@ import random
 from django.http import Http404
 from django.http import HttpResponse
 from rest_framework.views import APIView
-from .models import Insurance, Modern
+from .models import Insurance
 from .serializers import InsuranceSerializer
 from rest_framework.response import Response
 from rest_framework import status

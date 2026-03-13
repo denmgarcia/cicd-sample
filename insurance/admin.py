@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Insurance, Modern
+from .models import Insurance
 
 
 @admin.register(Insurance)
@@ -22,6 +22,3 @@ class InsuranceAdmin(admin.ModelAdmin):
         "policy_owner__username",
         "policy_owner__email",
     )
-
-
-admin.site.register(Modern)
