@@ -53,38 +53,30 @@ pipeline {
 
         stage('Update Kubernetes Manifests') {
             steps {
-                script {
-                    // TRIPLE SINGLE QUOTES are vital here to avoid Groovy syntax errors
-                    sh '''
-                        # 1. Direct path to the file
-                        TARGET="kubernetes/deployment.yml"
-        
-                        if [ -f "$TARGET" ]; then
-                            echo "Updating $TARGET"
+                // This helper binds your Jenkins credentials to variables the shell can use
+                withCredentials([usernamePassword(credentialsId: 'github-creds', 
+                                 passwordVariable: 'GIT_PASSWORD', 
+                                 usernameVariable: 'GIT_USERNAME')]) {
+                    script {
+                        sh '''
+                            TARGET="kubernetes/deployment.yml"
                             
-                            # 2. Update the image using the IMAGE_TAG env variable
-                            # We use the correct image name found in your YAML
+                            # 1. Update the file
                             sed -i "s|image: cyborden/cicd-sample.*|image: cyborden/cicd-sample:${IMAGE_TAG}|g" "$TARGET"
         
-                            # 3. Git setup
+                            # 2. Git Config
                             git config user.email "dengarcia.x@gmail.com"
                             git config user.name "Jenkins CI"
                             
+                            # 3. Commit
                             git add "$TARGET"
-                            
-                            # Only commit if something actually changed
-                            if ! git diff --cached --exit-code; then
-                                git commit -m "Update image tag to ${IMAGE_TAG}"
-                                git push origin main
-                            else
-                                echo "No changes detected. Skipping git push."
-                            fi
-                        else
-                            echo "ERROR: File $TARGET not found."
-                            ls -R
-                            exit 1
-                        fi
-                    '''
+                            git commit -m "Update image tag to ${IMAGE_TAG}"
+        
+                            # 4. Push using the credentials injected by Jenkins
+                            # We use the variables GIT_USERNAME and GIT_PASSWORD here
+                            git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/denmgarcia/cicd-sample.git main
+                        '''
+                    }
                 }
             }
         }
