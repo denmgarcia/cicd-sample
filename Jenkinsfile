@@ -5,6 +5,9 @@ pipeline {
         IMAGE_NAME = "cyborden/cicd-sample"  // Replace with your DockerHub repo
         IMAGE_TAG = "${env.GIT_COMMIT.take(7)}"
         SECRET_KEY = credentials('django-secret-key')
+        POSTGRES_DB = credentials('POSTGRES_DB')
+        POSTGRES_USER = credentials('POSTGRES_USER')
+        POSTGRES_PASSWORD = credentials('POSTGRES_PASSWORD')
     }
 
     stages {
@@ -19,7 +22,15 @@ pipeline {
             steps {
                 echo 'Building Docker image...'
                 script {
-                    docker.build("${IMAGE_NAME}:${IMAGE_TAG}", "--build-arg SECRET_KEY=${env.SECRET_KEY} .")
+                    docker.build(
+                        "${IMAGE_NAME}:${IMAGE_TAG}", """
+                        --build-arg SECRET_KEY=${SECRET_KEY} \
+                        --build-arg POSTGRES_DB=${POSTGRES_DB} \
+                        --build-arg POSTGRES_USER=${POSTGRES_USER} \
+                        --build-arg POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+                        .
+                         """
+                    )
                 }
             }
         }
