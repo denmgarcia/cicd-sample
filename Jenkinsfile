@@ -22,15 +22,13 @@ pipeline {
             steps {
                 echo 'Building Docker image...'
                 script {
-                    docker.build(
-                        "${IMAGE_NAME}:${IMAGE_TAG}", """
+                    docker.build("${IMAGE_NAME}:${IMAGE_TAG}", """
                         --build-arg SECRET_KEY=${SECRET_KEY} \
                         --build-arg POSTGRES_DB=${POSTGRES_DB} \
                         --build-arg POSTGRES_USER=${POSTGRES_USER} \
                         --build-arg POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
                         .
-                         """
-                    )
+                    """)
                 }
             }
         }
