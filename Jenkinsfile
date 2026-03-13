@@ -8,6 +8,10 @@ pipeline {
         POSTGRES_DB = credentials('POSTGRES_DB')
         POSTGRES_USER = credentials('POSTGRES_USER')
         POSTGRES_PASSWORD = credentials('POSTGRES_PASSWORD')
+        POSTGRES_HOST = credentials('POSTGRES_HOST')
+        POSTGRES_PORT = credentials('POSTGRES_PORT')
+        DJANGO_SETTINGS_MODULE = credentials('DJANGO_SETTINGS_MODULE')
+        DEBUG = credentials('DEBUG')
     }
 
     stages {
