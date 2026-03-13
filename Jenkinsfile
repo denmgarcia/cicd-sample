@@ -59,14 +59,14 @@ pipeline {
                     
                     sh """
                         # Replace image tag in deployment.yaml
-                        // sed -i "s|cyborden/cicd-sample:.*|cyborden/cicd-sample:${IMAGE_TAG}|g" ${manifestPath}
+                        # sed -i "s|cyborden/cicd-sample:.*|cyborden/cicd-sample:${IMAGE_TAG}|g" ${manifestPath}
 
-                        // # Commit and push the updated manifest
-                        // git config user.email "dengarcia.x@gmail.com"
-                        // git config user.name "Jenkins CI"
-                        // git add kubernetes/deployment.yaml
-                        // git commit -m "Update image tag to ${IMAGE_TAG}"
-                        // git push origin main
+                        # Commit and push the updated manifest
+                        # git config user.email "dengarcia.x@gmail.com"
+                        # git config user.name "Jenkins CI"
+                        # git add kubernetes/deployment.yaml
+                        # git commit -m "Update image tag to ${IMAGE_TAG}"
+                        # git push origin main
                         ls -la kubernetes 
                     """
                 }
