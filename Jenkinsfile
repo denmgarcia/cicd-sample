@@ -58,8 +58,6 @@ pipeline {
                     echo "Current workspace: "
                     echo "Checking for files..."
                     
-                    # 1. This finds the actual path, even if it is deep in the folders
-                    # It assigns the result to a variable called FILE_PATH
                     FILE_PATH=$(find . -name "deployment.yml" | head -n 1)
     
                     if [ -z "$FILE_PATH" ]; then
