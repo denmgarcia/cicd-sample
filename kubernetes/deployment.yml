@@ -16,9 +16,11 @@ spec:
     spec:
       containers:
         - name: django-api
-          image: cyborden/bpims-django-api:latest
+          image: cyborden/bpims-django-api:v1
           ports:
             - containerPort: 8000
           env:
             - name: DEBUG
               value: "False"
+            - name: POSTGRES_HOST
+              value: postgres-service
