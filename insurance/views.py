@@ -2,7 +2,7 @@ import random
 from django.http import Http404
 from django.http import HttpResponse
 from rest_framework.views import APIView
-from .models import Insurance
+from .models import Insurance, Modern
 from .serializers import InsuranceSerializer
 from rest_framework.response import Response
 from rest_framework import status
@@ -82,8 +82,9 @@ class InsuranceCreateFakeData(APIView):
 class InsuranceTest(APIView):
 
     def get(self, request, format=None):
+
+        moderns = Modern.objects.all()
+
         return Response(
-            {
-                "hey": "If you see this then wow!",
-            }
+            {"hey": "If you see this then wow!", "data": [modern for modern in moderns]}
         )

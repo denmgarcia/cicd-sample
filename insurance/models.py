@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User  # or your custom user model
+from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class Insurance(models.Model):
@@ -21,3 +22,8 @@ class Insurance(models.Model):
 
 class Modern(models.Model):
     name = models.CharField(max_length=255, unique=True)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateField(null=True, blank=True, default=None)
+
+    def __str__(self) -> str:
+        return f"{self.name}"
