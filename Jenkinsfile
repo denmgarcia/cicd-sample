@@ -57,14 +57,14 @@ pipeline {
                     // TRIPLE SINGLE QUOTES are vital here to avoid Groovy syntax errors
                     sh '''
                         # 1. Direct path to the file
-                        TARGET="bpims/kubernetes/deployment.yml"
+                        TARGET="kubernetes/deployment.yml"
         
                         if [ -f "$TARGET" ]; then
                             echo "Updating $TARGET"
                             
                             # 2. Update the image using the IMAGE_TAG env variable
                             # We use the correct image name found in your YAML
-                            sed -i "s|cyborden/bpims-django-api:.*|cyborden/bpims-django-api:${IMAGE_TAG}|g" "$TARGET"
+                            sed -i "s|cyborden/cicd-sample:.*|cyborden/cicd-sample:${IMAGE_TAG}|g" "$TARGET"
         
                             # 3. Git setup
                             git config user.email "dengarcia.x@gmail.com"
