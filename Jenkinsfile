@@ -53,18 +53,30 @@ pipeline {
 
         stage('Update Kubernetes Manifests') {
             steps {
-                script {
-                    sh """
-                        # Replace image tag in deployment.yaml
-                        sed -i 's|cyborden/cicd-sample:.*|cyborden/cicd-sample:${IMAGE_TAG}|g' kubernetes/deployment.yaml
-
-                        # Commit and push the updated manifest
-                        git config user.email "dengarcia.x@gmail.com"
-                        git config user.name "Jenkins CI"
-                        git add kubernetes/deployment.yaml
-                        git commit -m "Update image tag to ${IMAGE_TAG}"
-                        git push origin main
-                    """
+                // This helper binds your Jenkins credentials to variables the shell can use
+                withCredentials([usernamePassword(credentialsId: 'github-creds', 
+                                 passwordVariable: 'GIT_PASSWORD', 
+                                 usernameVariable: 'GIT_USERNAME')]) {
+                    script {
+                        sh '''
+                            TARGET="kubernetes/deployment.yml"
+                            
+                            # 1. Update the file
+                            sed -i "s|image: cyborden/cicd-sample.*|image: cyborden/cicd-sample:${IMAGE_TAG}|g" "$TARGET"
+        
+                            # 2. Git Config
+                            git config user.email "dengarcia.x@gmail.com"
+                            git config user.name "Jenkins CI"
+                            
+                            # 3. Commit
+                            git add "$TARGET"
+                            git commit -m "Update image tag to ${IMAGE_TAG}"
+        
+                            # 4. Push using the credentials injected by Jenkins
+                            # We use the variables GIT_USERNAME and GIT_PASSWORD here
+                            git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/denmgarcia/cicd-sample.git main
+                        '''
+                    }
                 }
             }
         }
