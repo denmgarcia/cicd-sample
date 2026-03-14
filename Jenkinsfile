@@ -43,8 +43,13 @@ pipeline {
                     docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
                         def myImage = docker.image("${IMAGE_NAME}:${IMAGE_TAG}")
                         myImage.push()
-                        myImage.push("latest")
-            }
+
+                        if (env.BRANCH_NAME == 'main') {
+                            myImage.push("latest")
+                        } else {
+                            myImage.push("${env.BRANCH_NAME}")
+                        }
+                    }
                 }
             }
         }
