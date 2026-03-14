@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: django-api
-          image: cyborden/cicd-sample:5893ed9
+          image: cyborden/cicd-sample:0561ec5
           ports:
             - containerPort: 8000
           env:
