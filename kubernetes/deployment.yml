@@ -6,7 +6,7 @@ metadata:
     app: django-api
 spec:
   revisionHistoryLimit: 1
-  replicas: 1
+  replicas: 10
   selector:
     matchLabels:
       app: django-api
