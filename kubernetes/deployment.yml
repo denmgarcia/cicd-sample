@@ -23,14 +23,14 @@ spec:
             - containerPort: 8000
           env:
             - name: DEBUG
-              value: ${DEBUG}
+              value: "False"
             - name: POSTGRES_HOST
-              value: ${POSTGRES_HOST}
+              value: postgres-service
             - name: POSTGRES_PORT
-              value: ${POSTGRES_PORT}
+              value: "5432"
             - name: POSTGRES_DB
-              value: ${POSTGRES_DB}
+              value: "bpims"
             - name: POSTGRES_USER
-              value: ${POSTGRES_USER}
+              value: "bpims"
             - name: POSTGRES_PASSWORD
-              value: ${POSTGRES_PASSWORD}
+              value: "bpims"
