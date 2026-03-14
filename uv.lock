@@ -58,6 +58,11 @@ dependencies = [
     { name = "whitenoise" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "black" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "black", specifier = ">=26.3.0" },
@@ -69,6 +74,9 @@ requires-dist = [
     { name = "psycopg2-binary", specifier = ">=2.9.11" },
     { name = "whitenoise", specifier = ">=6.12.0" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "black", specifier = ">=26.3.0" }]
 
 [[package]]
 name = "click"
