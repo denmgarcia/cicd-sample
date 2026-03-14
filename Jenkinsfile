@@ -18,7 +18,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Checking out source code...'
-                chekout scm
+                checkout scm
             }
         }
 
