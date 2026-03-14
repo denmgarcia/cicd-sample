@@ -53,9 +53,7 @@ RUN chmod +x /app/entrypoint.sh
 # Use the script as the entrypoint
 ENTRYPOINT ["/bin/sh", "/app/entrypoint.sh"]
 
-RUN python manage.py collectstatic --noinput
-
-RUN chown -R app:app /app
+RUN python manage.py collectstatic --noinput && chown -R app:app /app
 
 USER app
 
