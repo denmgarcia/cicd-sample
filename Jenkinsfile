@@ -18,7 +18,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Checking out source code...'
-                git branch: 'main', url: 'https://github.com/denmgarcia/cicd-sample.git'
+                checkout scm
             }
         }
 
@@ -26,63 +26,81 @@ pipeline {
             steps {
                 echo 'Building Docker image...'
                 script {
+
                     docker.build("${IMAGE_NAME}:${IMAGE_TAG}",
-                        "--build-arg SECRET_KEY=${SECRET_KEY} " +
-                        "--build-arg POSTGRES_DB=${POSTGRES_DB} " +
-                        "--build-arg POSTGRES_USER=${POSTGRES_USER} " +
-                        "--build-arg POSTGRES_PASSWORD=${POSTGRES_PASSWORD} ."
+                        "--build-arg SECRET_KEY='${SECRET_KEY}' " +
+                        "--build-arg POSTGRES_DB='${POSTGRES_DB}' " +
+                        "--build-arg POSTGRES_USER='${POSTGRES_USER}' " +
+                        "--build-arg POSTGRES_PASSWORD='${POSTGRES_PASSWORD}' " +
+                        "--build-arg POSTGRES_HOST='${POSTGRES_HOST}' " +
+                        "--build-arg POSTGRES_PORT='${POSTGRES_PORT}' ."
                     )
                 }
             }
         }
 
+        stage('Deploy to DEV') {
+            when { branch 'dev' }
+            steps {
+                echo 'Deploying to Development Namespace...'
+                sh """
+                    sed -i "s|image: cyborden/cicd-sample.*|image: cyborden/cicd-sample:${IMAGE_TAG}|g" kubernetes/deployment.yml
+                    kubectl apply -f kubernetes/deployment.yml -n dev
+                """
+            }
+        }
+
+
+        stage('Deploy to Staging') {
+            when { branch 'staging' }
+            steps {
+                echo 'Deploying to Staging Namespace...'
+                sh """
+                    sed -i "s|image: cyborden/cicd-sample.*|image: cyborden/cicd-sample:${IMAGE_TAG}|g" kubernetes/deployment.yml
+                    kubectl apply -f kubernetes/deployment.yml -n dev
+                """
+            }
+        }
+
         stage('Push Docker Image') {
             steps {
-                echo 'Pushing Docker image to Docker Hub (public)...'
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
                         def myImage = docker.image("${IMAGE_NAME}:${IMAGE_TAG}")
                         myImage.push()
                         myImage.push("latest")
-            }
+                    }
                 }
             }
         }
 
-        stage('Update Kubernetes Manifests') {
+        stage('Deploy to PROD & Update Manifests') {
+            when { branch 'main' }
             steps {
-                // This helper binds your Jenkins credentials to variables the shell can use
                 withCredentials([usernamePassword(credentialsId: 'github-creds',
                                  passwordVariable: 'GIT_PASSWORD',
                                  usernameVariable: 'GIT_USERNAME')]) {
                     script {
                         sh '''
                             TARGET="kubernetes/deployment.yml"
-
                             sed -i "s|image: cyborden/cicd-sample.*|image: cyborden/cicd-sample:${IMAGE_TAG}|g" "$TARGET"
 
+                            kubectl apply -f "$TARGET" -n prod
+
                             git config user.email "dengarcia.x@gmail.com"
-                            git config user.name "Jenkins CI"
-
+                            git config user.name "denmgarcia"
                             git add "$TARGET"
-                            git commit -m "Update image tag to ${IMAGE_TAG}"
-
-                            # We use the variables GIT_USERNAME and GIT_PASSWORD here
+                            git commit -m "Update image tag to ${IMAGE_TAG} [skip ci]"
                             git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/denmgarcia/cicd-sample.git main
                         '''
                     }
                 }
             }
         }
-
     }
 
     post {
-        success {
-            echo 'Pipeline completed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed!'
-        }
+        success { echo 'Pipeline completed successfully!' }
+        failure { echo 'Pipeline failed!' }
     }
 }
