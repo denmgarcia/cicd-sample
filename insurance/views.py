@@ -85,5 +85,7 @@ class InsuranceTest(APIView):
         return Response(
             {
                 "hey": "If you see this then wow!",
+                "status": 404,
+                "data": []
             }
         )
