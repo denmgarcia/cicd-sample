@@ -19,3 +19,12 @@ class Insurance(models.Model):
     def __str__(self) -> str:
         return f"{self.insurance_name} >> {self.policy_number} << PHP: {self.premium}"
 
+
+class InsuranceGroupOwner(models.Model):
+
+    group_owner = models.CharField(max_length=255)
+    groups = models.ManyToManyField(Insurance)
+    term_year = models.CharField(max_length=255)
+
+    def __str__(self) -> str:
+        return self.group_owner
