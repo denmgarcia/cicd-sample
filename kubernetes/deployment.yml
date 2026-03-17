@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: django-api
-          image: cyborden/cicd-sample:7ce95d1
+          image: cyborden/cicd-sample:51aafd5
           resources:
             limits:
               memory: 100Mi
