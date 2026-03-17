@@ -20,11 +20,22 @@ class Insurance(models.Model):
         return f"{self.insurance_name} >> {self.policy_number} << PHP: {self.premium}"
 
 
-class InsuranceGroupOwner(models.Model):
+class Publication(models.Model):
+    title = models.CharField(max_length=30)
 
-    group_owner = models.CharField(max_length=255)
-    groups = models.ManyToManyField(Insurance)
-    term_year = models.CharField(max_length=255)
+    class Meta:
+        ordering = ["title"]
 
-    def __str__(self) -> str:
-        return self.group_owner
+    def __str__(self):
+        return self.title
+
+
+class Article(models.Model):
+    headline = models.CharField(max_length=100)
+    publications = models.ManyToManyField(Publication)
+
+    class Meta:
+        ordering = ["headline"]
+
+    def __str__(self):
+        return self.headline
