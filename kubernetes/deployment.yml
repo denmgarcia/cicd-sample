@@ -19,6 +19,13 @@ spec:
       containers:
         - name: django-api
           image: cyborden/cicd-sample:1d5caa7
+          resources:
+            limits:
+              memory: 100Mi
+            requests:
+              memory: "2Gi"
+              cpu: 0.5
+              ephemeral-storage: "2Gi"
           ports:
             - containerPort: 8000
           env:
@@ -34,3 +41,4 @@ spec:
               value: "bpims"
             - name: POSTGRES_PASSWORD
               value: "bpims"
+        automountServiceAccountToken: false

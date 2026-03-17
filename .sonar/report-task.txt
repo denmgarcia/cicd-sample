@@ -1,0 +1,6 @@
+projectKey=bpims
+serverUrl=http://localhost:9000
+serverVersion=26.3.0.120487
+dashboardUrl=http://localhost:9000/dashboard?id=bpims
+ceTaskId=e64c38ce-f848-4d05-a353-e96757dfd8e1
+ceTaskUrl=http://localhost:9000/api/ce/task?id=e64c38ce-f848-4d05-a353-e96757dfd8e1
